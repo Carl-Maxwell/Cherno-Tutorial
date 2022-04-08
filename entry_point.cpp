@@ -42,11 +42,9 @@ int main() {
   // Initialize glfw
   //
 
-
   GLFWwindow* window;
 
-  if (!glfwInit())
-    return -1;
+  if (!glfwInit()) return -1;
 
   int WIDTH = 1280, HEIGHT = 720;
   // int WIDTH = 1920, HEIGHT = 1080;
@@ -66,7 +64,7 @@ int main() {
   // glfwSetKeyCallback(window, key_callback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-  
+
   //
   // Initialize glew
   //
@@ -97,15 +95,13 @@ int main() {
   glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(f32), positions, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
 
   //
   // Main loop
   //
 
-  while (!glfwWindowShouldClose(window))
-  {
+  while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // shader.Bind();
@@ -114,7 +110,6 @@ int main() {
     glfwSwapBuffers(window); // swap front and back buffers
 
     glfwPollEvents();
-
   }
 
   glfwTerminate();
