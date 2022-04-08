@@ -23,5 +23,8 @@
     <ClInclude Include="trunk\mtypedefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="trunk\print.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

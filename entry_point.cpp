@@ -28,7 +28,49 @@
 // Maxwell libraries
 //
 
-#include "trunk/mtypedefs.h"
+#include "mtypedefs.h"
+#include "print.h"
+
+//
+// Shader code
+//
+
+static u32 compileShader(u32 type, const std::string& source) {
+  u32 id = glCreateShader(type);
+  const char* src = source.c_str();
+  glShaderSource(id, 1, &src, nullptr);
+  glCompileShader(id);
+
+  int result;
+  glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+  if (result == GL_FALSE) {
+    i32 length;
+    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+    char* message = (char*)alloca(length * sizeof(char));
+    glGetShaderInfoLog(id, length, &length, message);
+    
+    Print::line("failed to compile " + std::string(type == GL_VERTEX_SHADER ? "vertex" : "fragment") + " shader\n");
+    Print::line(message);
+  }
+
+  return id;
+}
+
+static i32 createShader(const std::string& vertexShader, const std::string& fragmentShader) {
+  u32 program = glCreateProgram();
+  u32 vs = compileShader(GL_VERTEX_SHADER, vertexShader);
+  u32 fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+  glAttachShader(program, vs);
+  glAttachShader(program, fs);
+  glLinkProgram(program);
+  glValidateProgram(program);
+
+  glDeleteShader(vs);
+  glDeleteShader(fs);
+
+  return program;
+}
 
 //
 // Entry point
@@ -39,7 +81,7 @@ int main() {
   std::cout << "Hello world!\n";
 
   //
-  // Initialize glfw
+  // Initialize window & context (glfw)
   //
 
   GLFWwindow* window;
@@ -80,7 +122,7 @@ int main() {
   }
 
   //
-  //
+  // Initialize graphics
   //
 
   f32 positions[6] = {
@@ -96,6 +138,23 @@ int main() {
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
+
+  std::string vertexSrc = ""
+    "#version 330 core\n"
+    "layout(location = 0) in vec4 position;\n"
+    "void main() {\n"
+    " gl_Position = position;\n"
+    "}\n";
+
+  std::string fragmentSrc = ""
+    "#version 330 core\n"
+    "out vec4 color;\n"
+    "void main() {\n"
+    " color = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
+    "}\n";
+
+  u32 shader = createShader(vertexSrc, fragmentSrc);
+  glUseProgram(shader);
 
   //
   // Main loop
