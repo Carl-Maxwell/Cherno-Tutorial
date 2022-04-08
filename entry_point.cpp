@@ -1,7 +1,13 @@
 
+//
+// std includes
+//
+
 #include <iostream>
 
+//
 // Graphics libraries
+//
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -18,6 +24,11 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+//
+// Maxwell libraries
+//
+
+#include "trunk/mtypedefs.h"
 
 //
 // Entry point
@@ -62,11 +73,26 @@ int main() {
 
   {
     GLenum glew_error = glewInit();
-    if (glew_error != GLEW_OK)
+    if (glew_error != GLEW_OK) {
       fprintf(stderr, "glew init Error: %s\n", glewGetErrorString(glew_error));
-    fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-    std::cout << glGetString(GL_VERSION) << "\n";
+      return 0;
+    }
+    fprintf(stdout, "Using GLEW %s\n", glewGetString(GLEW_VERSION));
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
   }
+
+  //
+  //
+  //
+
+  u32 buffer = 3;
+  glGenBuffers(1, &buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer);
+  
+
+  //
+  // Main loop
+  //
 
   while (!glfwWindowShouldClose(window))
   {
@@ -75,17 +101,13 @@ int main() {
     // shader.Bind();
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
-  
     glfwSwapBuffers(window); // swap front and back buffers
 
     glfwPollEvents();
 
   }
 
-  
   glfwTerminate();
-
 
   return 0;
 }
