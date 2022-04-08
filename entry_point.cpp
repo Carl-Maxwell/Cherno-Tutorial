@@ -3,7 +3,11 @@
 // std includes
 //
 
+#include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
 
 //
 // Graphics libraries
@@ -32,8 +36,30 @@
 #include "print.h"
 
 //
+// Project Code
+//
+
+#include "glDebugMessageCallback.h"
+
+//
 // Shader code
 //
+
+// TODO rename to loadShader or something
+static std::string parseShader(const std::string& filepath) {
+  std::ifstream stream(filepath);
+
+  // Print::line( std::filesystem::current_path().string() );
+  // Print::line(filepath);
+
+  std::string line;
+  std::stringstream ss;
+  while (getline(stream, line)) {
+    ss << line << "\n";
+  }
+
+  return ss.str();
+}
 
 static u32 compileShader(u32 type, const std::string& source) {
   u32 id = glCreateShader(type);
@@ -51,6 +77,8 @@ static u32 compileShader(u32 type, const std::string& source) {
     
     Print::line("failed to compile " + std::string(type == GL_VERTEX_SHADER ? "vertex" : "fragment") + " shader\n");
     Print::line(message);
+
+    return u32(-1);
   }
 
   return id;
@@ -121,37 +149,48 @@ int main() {
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
   }
 
+  // Enable openGL debugging
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(GLDebugMessageCallback, NULL);
+
   //
   // Initialize graphics
   //
 
-  f32 positions[6] = {
+  f32 positions[] = {
     -0.5f, -0.5f,
-     0.0f,  0.5f,
-     0.5f, -0.5f
+     0.5f, -0.5f,
+     0.5f,  0.5f,
+    -0.5f,  0.5f
   };
 
-  u32 buffer = 3;
+  u32 indices[] = {
+    0, 1, 2,
+    2, 3, 0
+  };
+
+  u32 numberofTriangles = 2;
+
+  u32 buffer;
   glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(f32), positions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(f32) * numberofTriangles, positions, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
 
-  std::string vertexSrc = ""
-    "#version 330 core\n"
-    "layout(location = 0) in vec4 position;\n"
-    "void main() {\n"
-    " gl_Position = position;\n"
-    "}\n";
+  u32 indexBufferObj;
+  glGenBuffers(1, &indexBufferObj);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObj);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(u32), indices, GL_STATIC_DRAW);
 
-  std::string fragmentSrc = ""
-    "#version 330 core\n"
-    "out vec4 color;\n"
-    "void main() {\n"
-    " color = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
-    "}\n";
+  std::string vertexSrc   = parseShader("resources/shaders/vertex.glsl"  );
+  std::string fragmentSrc = parseShader("resources/shaders/fragment.glsl");
+
+  // Print::line(vertexSrc);
+  // Print::line(fragmentSrc);
 
   u32 shader = createShader(vertexSrc, fragmentSrc);
   glUseProgram(shader);
@@ -164,12 +203,15 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // shader.Bind();
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     glfwSwapBuffers(window); // swap front and back buffers
 
     glfwPollEvents();
   }
+
+  glDeleteProgram(shader);
 
   glfwTerminate();
 
