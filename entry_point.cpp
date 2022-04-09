@@ -1,5 +1,11 @@
 
 //
+// C Library includes
+//
+
+#include <cassert> // included for ASSERT
+
+//
 // std includes
 //
 
@@ -116,6 +122,10 @@ int main() {
 
   if (!glfwInit()) return -1;
 
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
   int WIDTH = 1280, HEIGHT = 720;
   // int WIDTH = 1920, HEIGHT = 1080;
 
@@ -143,7 +153,7 @@ int main() {
     GLenum glew_error = glewInit();
     if (glew_error != GLEW_OK) {
       fprintf(stderr, "glew init Error: %s\n", glewGetErrorString(glew_error));
-      return 0;
+      return -1;
     }
     fprintf(stdout, "Using GLEW %s\n", glewGetString(GLEW_VERSION));
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
@@ -171,12 +181,16 @@ int main() {
     2, 3, 0
   };
 
+  u32 vertexArrayObj;
+  glGenVertexArrays(1, &vertexArrayObj);
+  glBindVertexArray(vertexArrayObj);
+
   u32 numberofTriangles = 2;
 
   u32 buffer;
   glGenBuffers(1, &buffer);
   glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(f32) * numberofTriangles, positions, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(f32) * numberofTriangles, positions, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
@@ -195,15 +209,37 @@ int main() {
   u32 shader = createShader(vertexSrc, fragmentSrc);
   glUseProgram(shader);
 
+  u32 location = glGetUniformLocation(shader, "u_Color");
+  assert(location != -1);
+  glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
+
+  // unbind all that stuff
+
+  glBindVertexArray(0);
+  glUseProgram(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
   //
   // Main loop
   //
+
+  float red = 0.01f;
 
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // shader.Bind();
     // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    red += 0.01f;
+    red = red < 1.0f ? red : 0.01f;
+
+    glUseProgram(shader);
+    glUniform4f(location, red, 0.3f, 0.8f, 1.0f);
+    glBindVertexArray(vertexArrayObj);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObj);
+
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     glfwSwapBuffers(window); // swap front and back buffers
