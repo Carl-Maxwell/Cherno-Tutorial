@@ -128,7 +128,7 @@ void APIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint id,
         break;
     }
 
-    printf("%d: %s of %s severity, raised from %s: %s\n",
+    printf("OpenGL Error Msg Callback: %d: %s of %s severity, raised from %s: %s\n",
             id, _type, _severity, _source, msg);
 
     if (severe) {
