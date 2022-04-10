@@ -43,6 +43,7 @@
 #include "renderer.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+#include "vertex_array.h"
 
 //
 // Shader code
@@ -178,15 +179,14 @@ int main() {
     2, 3, 0
   };
 
-  u32 vertexArrayObj;
-  glGenVertexArrays(1, &vertexArrayObj);
-  glBindVertexArray(vertexArrayObj);
-
   const u32 numberofTriangles = 2;
-  VertexBuffer vertexBuf(positions, 4 * sizeof(f32) * numberofTriangles);
 
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
+  VertexArray vertexArr;
+  VertexBuffer vertexBuff(positions, 4 * sizeof(f32) * numberofTriangles);
+
+  VertexBufferLayout layout;
+  layout.push<f32>(2);
+  vertexArr.AddBuffer(vertexBuff, layout);
 
   IndexBuffer indexBuf(indices, 6);
 
@@ -225,8 +225,8 @@ int main() {
     glUseProgram(shader);
     glUniform4f(location, red, 0.3f, 0.8f, 1.0f);
 
+    vertexArr.bind();
     indexBuf.bind();
-    glBindVertexArray(vertexArrayObj);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

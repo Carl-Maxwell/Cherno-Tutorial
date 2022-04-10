@@ -152,6 +152,7 @@
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="trunk\index_buffer.cpp" />
     <ClCompile Include="trunk\renderer.cpp" />
+    <ClCompile Include="trunk\vertex_array.cpp" />
     <ClCompile Include="trunk\vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="trunk\mtypedefs.h" />
     <ClInclude Include="trunk\print.h" />
     <ClInclude Include="trunk\renderer.h" />
+    <ClInclude Include="trunk\vertex_array.h" />
     <ClInclude Include="trunk\vertex_buffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
