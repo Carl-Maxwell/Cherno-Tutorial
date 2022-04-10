@@ -34,6 +34,7 @@
 
 #include "mtypedefs.h"
 #include "print.h"
+#include "mvec3.h"
 
 //
 // Project Code
@@ -44,70 +45,11 @@
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 #include "vertex_array.h"
-
-//
-// Shader code
-//
-
-// TODO rename to loadShader or something
-static std::string parseShader(const std::string& filepath) {
-  std::ifstream stream(filepath);
-
-  // Print::line( std::filesystem::current_path().string() );
-  // Print::line(filepath);
-
-  std::string line;
-  std::stringstream ss;
-  while (getline(stream, line)) {
-    ss << line << "\n";
-  }
-
-  return ss.str();
-}
-
-static u32 compileShader(u32 type, const std::string& source) {
-  u32 id = glCreateShader(type);
-  const char* src = source.c_str();
-  glShaderSource(id, 1, &src, nullptr);
-  glCompileShader(id);
-
-  int result;
-  glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-  if (result == GL_FALSE) {
-    i32 length;
-    glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-    char* message = (char*)alloca(length * sizeof(char));
-    glGetShaderInfoLog(id, length, &length, message);
-    
-    Print::line("failed to compile " + std::string(type == GL_VERTEX_SHADER ? "vertex" : "fragment") + " shader\n");
-    Print::line(message);
-
-    return u32(-1);
-  }
-
-  return id;
-}
-
-static i32 createShader(const std::string& vertexShader, const std::string& fragmentShader) {
-  u32 program = glCreateProgram();
-  u32 vs = compileShader(GL_VERTEX_SHADER, vertexShader);
-  u32 fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-  glAttachShader(program, vs);
-  glAttachShader(program, fs);
-  glLinkProgram(program);
-  glValidateProgram(program);
-
-  glDeleteShader(vs);
-  glDeleteShader(fs);
-
-  return program;
-}
+#include "shader.h"
 
 //
 // Entry point
 //
-
 
 int main() {
   std::cout << "Hello world!\n";
@@ -190,18 +132,9 @@ int main() {
 
   IndexBuffer indexBuf(indices, 6);
 
-  std::string vertexSrc   = parseShader("resources/shaders/vertex.glsl"  );
-  std::string fragmentSrc = parseShader("resources/shaders/fragment.glsl");
+  // Shader stuff
 
-  // Print::line(vertexSrc);
-  // Print::line(fragmentSrc);
-
-  u32 shader = createShader(vertexSrc, fragmentSrc);
-  glUseProgram(shader);
-
-  u32 location = glGetUniformLocation(shader, "u_Color");
-  ASSERT(location != -1);
-  glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
+  Shader shader("resources/shaders/vertex.glsl", "resources/shaders/fragment.glsl");
 
   // unbind all that stuff
 
@@ -222,8 +155,8 @@ int main() {
     red += 0.01f;
     red = red < 1.0f ? red : 0.01f;
 
-    glUseProgram(shader);
-    glUniform4f(location, red, 0.3f, 0.8f, 1.0f);
+    shader.bind();
+    shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
 
     vertexArr.bind();
     indexBuf.bind();
@@ -234,8 +167,6 @@ int main() {
 
     glfwPollEvents();
   }
-
-  glDeleteProgram(shader);
 
   glfwTerminate();
 
