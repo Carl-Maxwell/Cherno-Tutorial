@@ -1,11 +1,5 @@
 
 //
-// C Library includes
-//
-
-#include <cassert> // included for ASSERT
-
-//
 // std includes
 //
 
@@ -46,6 +40,9 @@
 //
 
 #include "glDebugMessageCallback.h"
+#include "renderer.h"
+#include "vertex_buffer.h"
+#include "index_buffer.h"
 
 //
 // Shader code
@@ -185,20 +182,13 @@ int main() {
   glGenVertexArrays(1, &vertexArrayObj);
   glBindVertexArray(vertexArrayObj);
 
-  u32 numberofTriangles = 2;
-
-  u32 buffer;
-  glGenBuffers(1, &buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, buffer);
-  glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(f32) * numberofTriangles, positions, GL_STATIC_DRAW);
+  const u32 numberofTriangles = 2;
+  VertexBuffer vertexBuf(positions, 4 * sizeof(f32) * numberofTriangles);
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(f32) * 2, 0);
 
-  u32 indexBufferObj;
-  glGenBuffers(1, &indexBufferObj);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObj);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(u32), indices, GL_STATIC_DRAW);
+  IndexBuffer indexBuf(indices, 6);
 
   std::string vertexSrc   = parseShader("resources/shaders/vertex.glsl"  );
   std::string fragmentSrc = parseShader("resources/shaders/fragment.glsl");
@@ -210,7 +200,7 @@ int main() {
   glUseProgram(shader);
 
   u32 location = glGetUniformLocation(shader, "u_Color");
-  assert(location != -1);
+  ASSERT(location != -1);
   glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
 
   // unbind all that stuff
@@ -229,16 +219,14 @@ int main() {
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // shader.Bind();
-    // glDrawArrays(GL_TRIANGLES, 0, 6);
-
     red += 0.01f;
     red = red < 1.0f ? red : 0.01f;
 
     glUseProgram(shader);
     glUniform4f(location, red, 0.3f, 0.8f, 1.0f);
+
+    indexBuf.bind();
     glBindVertexArray(vertexArrayObj);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObj);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

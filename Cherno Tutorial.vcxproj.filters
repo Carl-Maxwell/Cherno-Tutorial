@@ -18,12 +18,30 @@
     <ClCompile Include="entry_point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="trunk\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trunk\vertex_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="trunk\index_buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="trunk\mtypedefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trunk\print.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\vertex_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\index_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
