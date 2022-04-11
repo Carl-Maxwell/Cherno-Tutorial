@@ -370,6 +370,9 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+# imgui ini file
+imgui.ini
+
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
