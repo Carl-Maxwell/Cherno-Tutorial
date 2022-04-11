@@ -8,6 +8,6 @@ out vec2 v_texCoord;
 uniform mat4 u_model_view_projection_matrix;
 
 void main() {
- gl_Position = position * u_model_view_projection_matrix;
+ gl_Position = u_model_view_projection_matrix * position;
  v_texCoord = texCoord;
 }
