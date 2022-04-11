@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <glm/glm.hpp>
+
 #include "mtypedefs.h"
 #include "mvec3.h"
 
@@ -43,6 +45,7 @@ public:
   // void setUniform2f(const std::string& name, f32* v);
   // void setUniform3f(const std::string& name, vec3 v);
   void setUniform4f(const std::string& name, vec4 v);
+  void setUniform4f(const std::string& name, const glm::mat4& v);
 
   // void setUniform(const std::string& name, i32 count, vec3* v);
   // void setUniform(const std::string& name, i32 count, vec4* v);

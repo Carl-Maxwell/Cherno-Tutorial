@@ -28,6 +28,9 @@
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 //
 // Maxwell libraries
 //
@@ -137,6 +140,8 @@ int main() {
 
   IndexBuffer indexBuf(indices, 6);
 
+  glm::mat4 proj_matrix = glm::ortho(-20.0f, 20.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
   // Load images
 
   Texture texture("resources/images/badguy.png");
@@ -172,6 +177,7 @@ int main() {
     shader.bind();
     shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
     shader.setUniform1i("u_texture", 0);
+    shader.setUniform4f("u_model_view_projection_matrix", proj_matrix);
 
     renderer.draw(vertexArr, indexBuf, shader);
 
