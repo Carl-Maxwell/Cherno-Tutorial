@@ -149,6 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="dependencies\include\imgui\imgui.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="dependencies\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="trunk\index_buffer.cpp" />
     <ClCompile Include="trunk\renderer.cpp" />
@@ -158,6 +165,15 @@
     <ClCompile Include="trunk\vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dependencies\include\imgui\imconfig.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="dependencies\include\imgui\imgui_internal.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="dependencies\include\imgui\imstb_truetype.h" />
     <ClInclude Include="trunk\index_buffer.h" />
     <ClInclude Include="trunk\linmath.h" />
     <ClInclude Include="trunk\mtypedefs.h" />

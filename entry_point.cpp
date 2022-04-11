@@ -13,12 +13,13 @@
 // Graphics libraries
 //
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <GLES2/gl2.h>
-#endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -67,6 +68,8 @@ int main() {
 
   if (!glfwInit()) return -1;
 
+  const char* glsl_version = "#version 330";
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -87,7 +90,7 @@ int main() {
   glfwMakeContextCurrent(window);
 
   // glfwSetKeyCallback(window, key_callback);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
   //
@@ -115,7 +118,7 @@ int main() {
   //
 
   f32 positions[] = {
-    // Positions          // UV coords
+   // Positions           // UV coords
     -0.5f, -0.5f,          0.0f, 0.0f,
      0.5f, -0.5f,          1.0f, 0.0f,
      0.5f,  0.5f,          1.0f, 1.0f,
@@ -140,7 +143,11 @@ int main() {
 
   IndexBuffer indexBuf(indices, 6);
 
-  glm::mat4 proj_matrix = glm::ortho(-20.0f, 20.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+  glm::mat4 proj_matrix = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+  glm::mat4 model_view_projection_matrix = proj_matrix * view;
 
   // Load images
 
@@ -163,6 +170,24 @@ int main() {
   Renderer renderer;
 
   //
+  // Initialize ImGui
+  //
+
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+  ImGui::StyleColorsDark();
+
+  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplOpenGL3_Init(glsl_version);
+
+  // imgui example state variables
+  bool show_demo_window = true;
+  bool show_another_window = false;
+  ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+  //
   // Main loop
   //
 
@@ -171,20 +196,74 @@ int main() {
   while (!glfwWindowShouldClose(window)) {
     renderer.clear();
 
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
     red += 0.01f;
     red = red < 1.0f ? red : 0.01f;
 
     shader.bind();
     shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
     shader.setUniform1i("u_texture", 0);
-    shader.setUniform4f("u_model_view_projection_matrix", proj_matrix);
+    shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
 
     renderer.draw(vertexArr, indexBuf, shader);
+
+    // imgui interface
+
+      // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+    if (show_demo_window)
+        ImGui::ShowDemoWindow(&show_demo_window);
+
+    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+    {
+        static float f = 0.0f;
+        static int counter = 0;
+
+        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        ImGui::Checkbox("Another Window", &show_another_window);
+
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            counter++;
+        ImGui::SameLine();
+        ImGui::Text("counter = %d", counter);
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
+    }
+
+    // 3. Show another simple window.
+    if (show_another_window)
+    {
+        ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+        ImGui::Text("Hello from another window!");
+        if (ImGui::Button("Close Me"))
+            show_another_window = false;
+        ImGui::End();
+    }
+
+    // end imgui interface
+
+    // render imgui
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glfwSwapBuffers(window); // swap front and back buffers
 
     glfwPollEvents();
   }
+
+  // Cleanup imgui
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
 
   glfwTerminate();
 
