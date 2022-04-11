@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <unordered_map>
 
 #include <fstream>
 #include <sstream>
@@ -89,16 +90,24 @@ u32 Shader::createShader(const std::string& vertexShader, const std::string& fra
   return program;
 }
 
-void Shader::setUniform4f(const std::string& name, vec4 v) const { 
+void Shader::setUniform1i(const std::string& name, i32  v) { 
+  glUniform1i(getUniformLocation(name), v);
+}
+
+void Shader::setUniform4f(const std::string& name, vec4 v) { 
 glUniform4f(getUniformLocation(name), v[0], v[1], v[2], v[3]); }
 
-i32 Shader::getUniformLocation(const std::string& name) const {
+i32 Shader::getUniformLocation(const std::string& name) {
+  if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end()) {
+    return m_uniform_location_cache[name];
+  }
   i32 location = glGetUniformLocation(m_renderer_id, name.c_str());
   if (location == -1) {
-    // Print::once("Shader.cpp warning:\n\tuniform: '" + name + "' doesn't exist in shader " + m_filepath + "!\n\tIs this uniform being used in the shader?");
-    __debugbreak();
+    // Print::once("shader.cpp warning:\n\tuniform: '" + name + "' doesn't exist in shader " + m_filepath + "!\n\tIs this uniform being used in the shader?");
+    // __debugbreak();
   }
 
+  m_uniform_location_cache[name] = location;
   return location;
 }
 

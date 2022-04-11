@@ -47,6 +47,7 @@
 #include "vertex_buffer_layout.h"
 #include "vertex_array.h"
 #include "shader.h"
+#include "texture.h"
 
 //
 // Entry point
@@ -111,10 +112,11 @@ int main() {
   //
 
   f32 positions[] = {
-    -0.5f, -0.5f,
-     0.5f, -0.5f,
-     0.5f,  0.5f,
-    -0.5f,  0.5f
+    // Positions          // UV coords
+    -0.5f, -0.5f,          0.0f, 0.0f,
+     0.5f, -0.5f,          1.0f, 0.0f,
+     0.5f,  0.5f,          1.0f, 1.0f,
+    -0.5f,  0.5f,          0.0f, 1.0f
   };
 
   u32 indices[] = {
@@ -122,16 +124,23 @@ int main() {
     2, 3, 0
   };
 
-  const u32 numberofTriangles = 2;
+  const u32 number_of_vertices = 4;
+  const u32 vertice_components = 4;
 
   VertexArray vertexArr;
-  VertexBuffer vertexBuff(positions, 4 * sizeof(f32) * numberofTriangles);
+  VertexBuffer vertexBuff(positions, sizeof(f32) * number_of_vertices * vertice_components);
 
   VertexBufferLayout layout;
+  layout.push<f32>(2);
   layout.push<f32>(2);
   vertexArr.AddBuffer(vertexBuff, layout);
 
   IndexBuffer indexBuf(indices, 6);
+
+  // Load images
+
+  Texture texture("resources/images/badguy.png");
+  texture.bind();
 
   // Shader stuff
 
@@ -162,6 +171,7 @@ int main() {
 
     shader.bind();
     shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
+    shader.setUniform1i("u_texture", 0);
 
     renderer.draw(vertexArr, indexBuf, shader);
 

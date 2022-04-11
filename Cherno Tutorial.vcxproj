@@ -153,6 +153,7 @@
     <ClCompile Include="trunk\index_buffer.cpp" />
     <ClCompile Include="trunk\renderer.cpp" />
     <ClCompile Include="trunk\shader.cpp" />
+    <ClCompile Include="trunk\texture.cpp" />
     <ClCompile Include="trunk\vertex_array.cpp" />
     <ClCompile Include="trunk\vertex_buffer.cpp" />
   </ItemGroup>
@@ -164,6 +165,9 @@
     <ClInclude Include="trunk\print.h" />
     <ClInclude Include="trunk\renderer.h" />
     <ClInclude Include="trunk\shader.h" />
+    <ClInclude Include="trunk\stb_image.h" />
+    <ClInclude Include="trunk\stb_image_namespace.h" />
+    <ClInclude Include="trunk\texture.h" />
     <ClInclude Include="trunk\vertex_array.h" />
     <ClInclude Include="trunk\vertex_buffer.h" />
   </ItemGroup>

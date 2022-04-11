@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
 #include "mtypedefs.h"
 #include "mvec3.h"
@@ -10,6 +11,7 @@ public:
   u32 m_renderer_id;
   std::string m_vertex_filepath;
   std::string m_fragment_filepath;
+  std::unordered_map<std::string, i32> m_uniform_location_cache;
 
   Shader(const std::string& vertex_filepath, const std::string& fragment_filepath);
   ~Shader();
@@ -22,7 +24,7 @@ public:
   std::string parseShader(const std::string& filepath); 
 
   // Set uniforms
-  // void setUniform1i(const std::string& name, i32  v);
+  void setUniform1i(const std::string& name, i32  v);
   // void setUniform2i(const std::string& name, i32* v);
   // void setUniform3i(const std::string& name, i32* v);
   // void setUniform4i(const std::string& name, i32* v);
@@ -40,11 +42,11 @@ public:
   // void setUniform1f(const std::string& name, f32* v);
   // void setUniform2f(const std::string& name, f32* v);
   // void setUniform3f(const std::string& name, vec3 v);
-  void setUniform4f(const std::string& name, vec4 v) const;
+  void setUniform4f(const std::string& name, vec4 v);
 
   // void setUniform(const std::string& name, i32 count, vec3* v);
   // void setUniform(const std::string& name, i32 count, vec4* v);
 
-  i32 getUniformLocation(const std::string& name) const;
+  i32 getUniformLocation(const std::string& name);
   
 };
