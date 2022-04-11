@@ -27,114 +27,128 @@
 // REQUIREMENTS: OpenGL version with the KHR_debug extension available.
 
 // Callback function for printing debug statements
-void APIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint id,
-                            GLenum severity, GLsizei length,
-                            const GLchar *msg, const void *data)
-{
-    char* _source;
-    char* _type;
-    char* _severity;
+void APIENTRY GLDebugMessageCallback(
+  GLenum source, 
+  GLenum type, 
+  GLuint id,
+  GLenum severity, 
+  GLsizei length,
+  const GLchar *msg, 
+  const void *data
+) {
+  char* _source;
+  char* _type;
+  char* _severity;
 
-    length;
-    data;
+  length;
+  data;
 
-    bool severe = false;
+  bool severe = false;
 
-    switch (source) {
-        case GL_DEBUG_SOURCE_API:
-        _source = "API";
-        break;
+  switch (source) {
+    case GL_DEBUG_SOURCE_API:
+    _source = "API";
+    break;
 
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-        _source = "WINDOW SYSTEM";
-        break;
+    case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+    _source = "WINDOW SYSTEM";
+    break;
 
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-        _source = "SHADER COMPILER";
-        break;
+    case GL_DEBUG_SOURCE_SHADER_COMPILER:
+    _source = "SHADER COMPILER";
+    break;
 
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-        _source = "THIRD PARTY";
-        break;
+    case GL_DEBUG_SOURCE_THIRD_PARTY:
+    _source = "THIRD PARTY";
+    break;
 
-        case GL_DEBUG_SOURCE_APPLICATION:
-        _source = "APPLICATION";
-        break;
+    case GL_DEBUG_SOURCE_APPLICATION:
+    _source = "APPLICATION";
+    break;
 
-        case GL_DEBUG_SOURCE_OTHER:
-        _source = "UNKNOWN";
-        break;
+    case GL_DEBUG_SOURCE_OTHER:
+    _source = "UNKNOWN";
+    break;
 
-        default:
-        _source = "UNKNOWN";
-        break;
-    }
+    default:
+    _source = "UNKNOWN";
+    break;
+  }
 
-    switch (type) {
-        case GL_DEBUG_TYPE_ERROR:
-        _type = "ERROR";
-        break;
+  switch (type) {
+    case GL_DEBUG_TYPE_ERROR:
+    _type = "ERROR";
+    break;
 
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        _type = "DEPRECATED BEHAVIOR";
-        break;
+    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+    _type = "DEPRECATED BEHAVIOR";
+    break;
 
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-        _type = "UDEFINED BEHAVIOR";
-        break;
+    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+    _type = "UDEFINED BEHAVIOR";
+    break;
 
-        case GL_DEBUG_TYPE_PORTABILITY:
-        _type = "PORTABILITY";
-        break;
+    case GL_DEBUG_TYPE_PORTABILITY:
+    _type = "PORTABILITY";
+    break;
 
-        case GL_DEBUG_TYPE_PERFORMANCE:
-        _type = "PERFORMANCE";
-        break;
+    case GL_DEBUG_TYPE_PERFORMANCE:
+    _type = "PERFORMANCE";
+    break;
 
-        case GL_DEBUG_TYPE_OTHER:
-        _type = "OTHER";
-        break;
+    case GL_DEBUG_TYPE_OTHER:
+    _type = "OTHER";
+    break;
 
-        case GL_DEBUG_TYPE_MARKER:
-        _type = "MARKER";
-        break;
+    case GL_DEBUG_TYPE_MARKER:
+    _type = "MARKER";
+    break;
 
-        default:
-        _type = "UNKNOWN";
-        break;
-    }
+    default:
+    _type = "UNKNOWN";
+    break;
+  }
 
-    switch (severity) {
-        case GL_DEBUG_SEVERITY_HIGH:
-        _severity = "HIGH";
-        severe = true;
-        break;
+  switch (severity) {
+    case GL_DEBUG_SEVERITY_HIGH:
+    _severity = "HIGH";
+    severe = true;
+    break;
 
-        case GL_DEBUG_SEVERITY_MEDIUM:
-        _severity = "MEDIUM";
-        severe = true;
-        break;
+    case GL_DEBUG_SEVERITY_MEDIUM:
+    _severity = "MEDIUM";
+    severe = true;
+    break;
 
-        case GL_DEBUG_SEVERITY_LOW:
-        _severity = "LOW";
-        break;
+    case GL_DEBUG_SEVERITY_LOW:
+    _severity = "LOW";
+    break;
 
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-        _severity = "NOTIFICATION";
-        break;
+    case GL_DEBUG_SEVERITY_NOTIFICATION:
+    _severity = "NOTIFICATION";
+    break;
 
-        default:
-        _severity = "UNKNOWN";
-        break;
-    }
+    default:
+    _severity = "UNKNOWN";
+    break;
+  }
 
-    printf("OpenGL Error Msg Callback: %d: %s of %s severity, raised from %s: %s\n",
-            id, _type, _severity, _source, msg);
+  if (id = 131185) {
+    return;
+    // silence warnings of the following type:
+    // OpenGL Error Msg Callback: 131185: OTHER of NOTIFICATION severity, 
+    //   raised from API: Buffer detailed info: 
+    //   Buffer object 1 (bound to GL_ARRAY_BUFFER_ARB, usage hint is GL_STATIC_DRAW)
+    //   will use VIDEO memory as the source for buffer object operations.
+  }
 
-    if (severe) {
-      __debugbreak();
-        // Application::the().close();
-    }
+  printf("OpenGL Error Msg Callback: %d: %s of %s severity, raised from %s: %s\n",
+    id, _type, _severity, _source, msg);
+
+  if (severe) {
+    __debugbreak();
+    // Application::the().close();
+  }
 }
 
 // =============== INIT DEBUG OUTPUT ================
