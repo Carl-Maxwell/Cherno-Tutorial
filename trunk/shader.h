@@ -40,11 +40,11 @@ public:
   // void setUniform1f(const std::string& name, f32* v);
   // void setUniform2f(const std::string& name, f32* v);
   // void setUniform3f(const std::string& name, vec3 v);
-  void setUniform4f(const std::string& name, vec4 v);
+  void setUniform4f(const std::string& name, vec4 v) const;
 
   // void setUniform(const std::string& name, i32 count, vec3* v);
   // void setUniform(const std::string& name, i32 count, vec4* v);
 
-  i32 getUniformLocation(const std::string& name);
+  i32 getUniformLocation(const std::string& name) const;
   
 };

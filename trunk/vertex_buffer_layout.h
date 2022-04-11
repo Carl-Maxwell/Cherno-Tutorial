@@ -2,11 +2,14 @@
 
 #include <vector>
 
+#define GLEW_STATIC
 #include "GL/glew.h"
 
 #include "mtypedefs.h"
 
 #include "renderer.h"
+
+#define ASSERT(x) if (!(x)) __debugbreak();
 
 struct VertexBufferElement {
   u32 type;

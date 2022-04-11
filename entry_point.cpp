@@ -44,6 +44,7 @@
 #include "renderer.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
+#include "vertex_buffer_layout.h"
 #include "vertex_array.h"
 #include "shader.h"
 
@@ -143,6 +144,10 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+  // 
+
+  Renderer renderer;
+
   //
   // Main loop
   //
@@ -150,7 +155,7 @@ int main() {
   float red = 0.01f;
 
   while (!glfwWindowShouldClose(window)) {
-    glClear(GL_COLOR_BUFFER_BIT);
+    renderer.clear();
 
     red += 0.01f;
     red = red < 1.0f ? red : 0.01f;
@@ -158,10 +163,7 @@ int main() {
     shader.bind();
     shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
 
-    vertexArr.bind();
-    indexBuf.bind();
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    renderer.draw(vertexArr, indexBuf, shader);
 
     glfwSwapBuffers(window); // swap front and back buffers
 

@@ -13,5 +13,5 @@ public:
   void bind() const;
   void unbind() const;
 
-  inline u32 getCount() { return m_count; };
+  inline u32 getCount() const { return m_count; };
 };

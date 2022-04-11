@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 
+#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include "shader.h"
@@ -88,9 +89,10 @@ u32 Shader::createShader(const std::string& vertexShader, const std::string& fra
   return program;
 }
 
-void Shader::setUniform4f(const std::string& name, vec4 v) { glUniform4f(getUniformLocation(name), v[0], v[1], v[2], v[3]); }
+void Shader::setUniform4f(const std::string& name, vec4 v) const { 
+glUniform4f(getUniformLocation(name), v[0], v[1], v[2], v[3]); }
 
-i32 Shader::getUniformLocation(const std::string& name) {
+i32 Shader::getUniformLocation(const std::string& name) const {
   i32 location = glGetUniformLocation(m_renderer_id, name.c_str());
   if (location == -1) {
     // Print::once("Shader.cpp warning:\n\tuniform: '" + name + "' doesn't exist in shader " + m_filepath + "!\n\tIs this uniform being used in the shader?");

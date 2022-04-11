@@ -59,5 +59,8 @@
     <ClInclude Include="trunk\mvec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="trunk\linmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
