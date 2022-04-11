@@ -119,10 +119,10 @@ int main() {
 
   f32 positions[] = {
    // Positions           // UV coords
-    -0.5f, -0.5f,          0.0f, 0.0f,
-     0.5f, -0.5f,          1.0f, 0.0f,
-     0.5f,  0.5f,          1.0f, 1.0f,
-    -0.5f,  0.5f,          0.0f, 1.0f
+     100.0f, 100.0f,          0.0f, 0.0f,
+     200.0f, 100.0f,          1.0f, 0.0f,
+     200.0f, 200.0f,          1.0f, 1.0f,
+     100.0f, 200.0f,          0.0f, 1.0f
   };
 
   u32 indices[] = {
@@ -143,11 +143,11 @@ int main() {
 
   IndexBuffer indexBuf(indices, 6);
 
-  glm::mat4 proj_matrix = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+  glm::mat4 proj_matrix = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
   glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
   glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
 
-  glm::mat4 model_view_projection_matrix = proj_matrix * view;
+  glm::mat4 model_view_projection_matrix = proj_matrix * view * model;
 
   // Load images
 
@@ -186,6 +186,7 @@ int main() {
   bool show_demo_window = true;
   bool show_another_window = false;
   ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+  glm::vec3 translation(200, 200, 0);
 
   //
   // Main loop
@@ -212,30 +213,19 @@ int main() {
 
     // imgui interface
 
+    model = glm::translate(glm::mat4(1.0f), translation);
+    model_view_projection_matrix = proj_matrix * view * model;
+
       // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
 
     // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
     {
-        static float f = 0.0f;
-        static int counter = 0;
+        ImGui::Begin("Hello, world!");
 
-        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+        ImGui::SliderFloat3("translation", &translation.x, 0.0f, 720.0f);
 
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
-
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
 
