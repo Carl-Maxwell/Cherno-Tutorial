@@ -63,6 +63,9 @@
     <ClCompile Include="dependencies\include\imgui\imgui_impl_opengl3.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="trunk\ui_styling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="trunk\mtypedefs.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="dependencies\include\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\ui_styling.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
