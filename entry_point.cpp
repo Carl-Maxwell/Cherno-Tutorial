@@ -120,10 +120,10 @@ int main() {
 
   f32 positions[] = {
    // Positions           // UV coords
-     100.0f, 100.0f,          0.0f, 0.0f,
-     200.0f, 100.0f,          1.0f, 0.0f,
-     200.0f, 200.0f,          1.0f, 1.0f,
-     100.0f, 200.0f,          0.0f, 1.0f
+     -50.0f, -50.0f,          0.0f, 0.0f,
+      50.0f, -50.0f,          1.0f, 0.0f,
+      50.0f,  50.0f,          1.0f, 1.0f,
+     -50.0f,  50.0f,          0.0f, 1.0f
   };
 
   u32 indices[] = {
@@ -145,7 +145,7 @@ int main() {
   IndexBuffer indexBuf(indices, 6);
 
   glm::mat4 proj_matrix = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);
-  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
   glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
 
   glm::mat4 model_view_projection_matrix = proj_matrix * view * model;
@@ -196,6 +196,11 @@ int main() {
   glm::vec3 translation(200, 200, 0);
 
   //
+
+  glm::vec3 translationA(200, 200, 0);
+  glm::vec3 translationB(400, 200, 0);
+
+  //
   // Main loop
   //
 
@@ -211,17 +216,25 @@ int main() {
     red += 0.01f;
     red = red < 1.0f ? red : 0.01f;
 
-    shader.bind();
     shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
+
+    shader.bind();
     shader.setUniform1i("u_texture", 0);
-    shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
 
-    renderer.draw(vertexArr, indexBuf, shader);
+    {
+      model = glm::translate(glm::mat4(1.0f), translationA);
+      model_view_projection_matrix = proj_matrix * view * model;
+      shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
+      renderer.draw(vertexArr, indexBuf, shader);
+    }
 
+    {
+      model = glm::translate(glm::mat4(1.0f), translationB);
+      model_view_projection_matrix = proj_matrix * view * model;
+      shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
+      renderer.draw(vertexArr, indexBuf, shader);
+    }
     // imgui interface
-
-    model = glm::translate(glm::mat4(1.0f), translation);
-    model_view_projection_matrix = proj_matrix * view * model;
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
@@ -230,7 +243,8 @@ int main() {
     {
       ImGui::Begin("Hello, world!");
 
-      ImGui::SliderFloat3("translation", &translation.x, 0.0f, 720.0f);
+      ImGui::SliderFloat3("translation A", &translationA.x, 0.0f, 720.0f);
+      ImGui::SliderFloat3("translation B", &translationB.x, 0.0f, 720.0f);
 
       ImGui::End();
     }
