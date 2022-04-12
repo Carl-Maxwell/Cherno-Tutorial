@@ -185,26 +185,9 @@ int main() {
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glsl_version);
 
-  // set imgui styles
-
-
-
-  // imgui example state variables
-  bool show_demo_window = true;
-  bool show_another_window = false;
-  ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-  glm::vec3 translation(200, 200, 0);
-
-  //
-
-  glm::vec3 translationA(200, 200, 0);
-  glm::vec3 translationB(400, 200, 0);
-
   //
   // Main loop
   //
-
-  float red = 0.01f;
 
   while (!glfwWindowShouldClose(window)) {
     renderer.clear();
@@ -213,51 +196,7 @@ int main() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    red += 0.01f;
-    red = red < 1.0f ? red : 0.01f;
-
-    shader.setUniform4f("u_Color", vec4{red, 0.3f, 0.8f, 1.0f});
-
-    shader.bind();
-    shader.setUniform1i("u_texture", 0);
-
-    {
-      model = glm::translate(glm::mat4(1.0f), translationA);
-      model_view_projection_matrix = proj_matrix * view * model;
-      shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
-      renderer.draw(vertexArr, indexBuf, shader);
-    }
-
-    {
-      model = glm::translate(glm::mat4(1.0f), translationB);
-      model_view_projection_matrix = proj_matrix * view * model;
-      shader.setUniform4f("u_model_view_projection_matrix", model_view_projection_matrix);
-      renderer.draw(vertexArr, indexBuf, shader);
-    }
-    // imgui interface
-
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
-
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-    {
-      ImGui::Begin("Hello, world!");
-
-      ImGui::SliderFloat3("translation A", &translationA.x, 0.0f, 720.0f);
-      ImGui::SliderFloat3("translation B", &translationB.x, 0.0f, 720.0f);
-
-      ImGui::End();
-    }
-
-    // 3. Show another simple window.
-    if (show_another_window) {
-      ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-      ImGui::Text("Hello from another window!");
-      if (ImGui::Button("Close Me")) show_another_window = false;
-      ImGui::End();
-    }
-
-    // end imgui interface
+    
 
     // render imgui
     ImGui::Render();
