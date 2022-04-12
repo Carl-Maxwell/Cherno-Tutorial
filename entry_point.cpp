@@ -149,7 +149,7 @@ int main() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-
+    
 
     // render imgui
     ImGui::Render();
@@ -158,6 +158,11 @@ int main() {
     glfwSwapBuffers(window); // swap front and back buffers
 
     glfwPollEvents();
+
+    // close app if esc is hit
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+      glfwSetWindowShouldClose(window, true);
+    }
   }
 
   // Cleanup imgui
