@@ -54,6 +54,11 @@
 #include "texture.h"
 #include "ui_styling.h"
 
+// Tests
+
+#include "tests/test.h"
+#include "tests/test_clear_color.h"
+
 //
 // Entry point
 //
@@ -77,11 +82,11 @@ int main() {
 
   // window:
   // int WIDTH = 1280, HEIGHT = 720;
-  // window = glfwCreateWindow(WIDTH, HEIGHT, "Urbarak 3d", NULL, NULL);
+  // window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", NULL, NULL);
 
   // borderless window:
   int WIDTH = 1920, HEIGHT = 1080;
-  window = glfwCreateWindow(WIDTH, HEIGHT, "Urbarak 3d", glfwGetPrimaryMonitor(), NULL);
+  window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", glfwGetPrimaryMonitor(), NULL);
 
   if (!window) {
     glfwTerminate();
@@ -138,24 +143,41 @@ int main() {
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init(glsl_version);
 
+  test::Test* current_test = nullptr;
+  test::TestMenu* test_menu = new test::TestMenu(current_test);
+  current_test = test_menu;
+  current_test->title = "Test Menu";
+
+  test_menu->registerTest<test::TestClearColor>("Clear Color");
+
   //
   // Main loop
   //
 
   while (!glfwWindowShouldClose(window)) {
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     renderer.clear();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    
+    if (current_test) {
+      current_test->onUpdate(0.0f);
+      current_test->onRender();
+      ImGui::Begin(current_test->title.c_str());
+      if (current_test != test_menu && ImGui::Button("Back")) {
+        delete current_test;
+        current_test = test_menu;
+      }
+      current_test->onImguiRender();
+      ImGui::End();
+    } 
 
-    // render imgui
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    glfwSwapBuffers(window); // swap front and back buffers
+    glfwSwapBuffers(window);
 
     glfwPollEvents();
 
@@ -165,7 +187,6 @@ int main() {
     }
   }
 
-  // Cleanup imgui
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
