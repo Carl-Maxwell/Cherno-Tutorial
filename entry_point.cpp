@@ -41,6 +41,7 @@
 #include "print.h"
 #include "mvec3.h"
 #include "in_game_console.h"
+#include "keyboard.h"
 
 //
 // Project Code
@@ -97,7 +98,7 @@ int main() {
 
   glfwMakeContextCurrent(window);
 
-  // glfwSetKeyCallback(window, key_callback);
+  glfwSetKeyCallback(window, keyboard::Keyboard::keyCallback);
   // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   //
@@ -178,11 +179,11 @@ int main() {
 
     // Draw the in-game console
     {
+      using keyboard::Keyboard;
+      using keyboard::Key;
+
       // show/hide console if tilda is hit (~)
-      if (glfwGetKey(window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS) {
-        Console::the().visible = !Console::the().visible;
-        // TODO this should toggle the visibility once on keyup
-      }
+      Console::the().visible = Key("~").isKeyToggled();
 
       if (Console::the().visible) {
         Console::draw();

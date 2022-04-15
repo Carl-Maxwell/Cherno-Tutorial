@@ -159,6 +159,7 @@
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="trunk\index_buffer.cpp" />
     <ClCompile Include="trunk\in_game_console.cpp" />
+    <ClCompile Include="trunk\keyboard.cpp" />
     <ClCompile Include="trunk\renderer.cpp" />
     <ClCompile Include="trunk\shader.cpp" />
     <ClCompile Include="trunk\tests\test.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="dependencies\include\imgui\imstb_truetype.h" />
     <ClInclude Include="trunk\index_buffer.h" />
     <ClInclude Include="trunk\in_game_console.h" />
+    <ClInclude Include="trunk\keyboard.h" />
     <ClInclude Include="trunk\linmath.h" />
     <ClInclude Include="trunk\mtypedefs.h" />
     <ClInclude Include="trunk\mvec3.h" />
