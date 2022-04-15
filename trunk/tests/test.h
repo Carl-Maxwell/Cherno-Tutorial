@@ -5,6 +5,8 @@
 #include <functional>
 #include <utility>
 
+#include "print.h"
+
 namespace test{
 
 class Test{
@@ -31,11 +33,11 @@ public:
   
   template <class T>
   void registerTest(const std::string& name) {
-    std::cout << "Registering test " << name << "\n";
+    Print::line("Registering test " + name);
     m_tests.push_back(std::make_pair(name, [name](){
       T* new_test = new T(); 
       new_test->title = name;
-      std::cout << "Lambda registering " << name << " = " << new_test->title << "\n";
+      Print::line("Lambda registering " + name + " = " + new_test->title);
       return new_test;
     }));
   }

@@ -5,6 +5,8 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include "print.h"
+
 #include "texture.h"
 
 #include "stb_image_namespace.h"
@@ -20,11 +22,11 @@ Texture::Texture(const std::string& path)
   stb::stbi_set_flip_vertically_on_load(true);
   m_pixels = stb::stbi_load(path.c_str(), &m_width, &m_height, &m_bytes_per_pixel, 4);
 
-  std::cout << path << " ,"
-    << " width:  " << m_width
-    << " height: " << m_height
-    << " n: " << m_bytes_per_pixel
-    << "\n";
+  Print::line(path + " ,"
+    + " width:  " + std::to_string(m_width)
+    + " height: " + std::to_string(m_height)
+    + " n: "      + std::to_string(m_bytes_per_pixel)
+  );
 
   glGenTextures(1, &m_renderer_id);
   glBindTexture(GL_TEXTURE_2D, m_renderer_id);

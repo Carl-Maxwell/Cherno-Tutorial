@@ -72,6 +72,9 @@
     <ClCompile Include="trunk\tests\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="trunk\in_game_console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="trunk\mtypedefs.h">
@@ -144,6 +147,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trunk\tests\test_clear_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\in_game_console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

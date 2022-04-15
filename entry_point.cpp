@@ -16,6 +16,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <imgui/imgui_internal.h>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -39,6 +40,7 @@
 #include "mtypedefs.h"
 #include "print.h"
 #include "mvec3.h"
+#include "in_game_console.h"
 
 //
 // Project Code
@@ -64,7 +66,7 @@
 //
 
 int main() {
-  std::cout << "Hello world!\n";
+  Print::line("Hello world!");
 
   //
   // Initialize window & context (glfw)
@@ -81,12 +83,12 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // window:
-  // int WIDTH = 1280, HEIGHT = 720;
-  // window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", NULL, NULL);
+  int WIDTH = 1280, HEIGHT = 720;
+  window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", NULL, NULL);
 
   // borderless window:
-  int WIDTH = 1920, HEIGHT = 1080;
-  window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", glfwGetPrimaryMonitor(), NULL);
+  // int WIDTH = 1920, HEIGHT = 1080;
+  // window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", glfwGetPrimaryMonitor(), NULL);
 
   if (!window) {
     glfwTerminate();
@@ -109,7 +111,7 @@ int main() {
       return -1;
     }
     fprintf(stdout, "Using GLEW %s\n", glewGetString(GLEW_VERSION));
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
+    Print::line("OpenGL version: " + std::string((char*)glGetString(GL_VERSION)) );
   }
 
   // Enable openGL debugging
@@ -172,7 +174,20 @@ int main() {
       }
       current_test->onImguiRender();
       ImGui::End();
-    } 
+    }
+
+    // Draw the in-game console
+    {
+      // show/hide console if tilda is hit (~)
+      if (glfwGetKey(window, GLFW_KEY_GRAVE_ACCENT) == GLFW_PRESS) {
+        Console::the().visible = !Console::the().visible;
+        // TODO this should toggle the visibility once on keyup
+      }
+
+      if (Console::the().visible) {
+        Console::draw();
+      }
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
