@@ -25,11 +25,11 @@ Keyboard::Keyboard() {
 }
 
 void Keyboard::emitKeyDown(Key key) {
-  Print::line("emitKeyDown " + key.to_str());
+
 }
 
 void Keyboard::emitKeyUp(Key key) {
-  Print::line("emitKeyUp " + key.to_str());
+
 }
 
 void Keyboard::keyCallback(GLFWwindow* window, int glfw_key, int scancode, int action, int mods) {
@@ -54,8 +54,6 @@ void Keyboard::keyCallback(GLFWwindow* window, int glfw_key, int scancode, int a
       keyboard.key_toggles[key.to_int()] = !keyboard.key_toggles[key.to_int()];
     }
   }
-
-  key;
 }
 
 //-----------------------------------------------------------------------------
