@@ -97,7 +97,7 @@ void Shader::setUniform1i(const std::string& name, i32  v) { glUniform1i(getUnif
 void Shader::setUniform4f(const std::string& name, vec4 v            ) { glUniform4f(getUniformLocation(name), v[0], v[1], v[2], v[3]); }
 void Shader::setUniform4f(const std::string& name, const glm::mat4& v) { glUniformMatrix4fv(getUniformLocation(name), 1, false, &v[0][0]); }
 
-i32 Shader::getUniformLocation(const std::string& name) {
+i32 Shader::getUniformLocation(const std::string& name) const {
   if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end()) {
     return m_uniform_location_cache[name];
   }

@@ -13,7 +13,7 @@ public:
   u32 m_renderer_id;
   std::string m_vertex_filepath;
   std::string m_fragment_filepath;
-  std::unordered_map<std::string, i32> m_uniform_location_cache;
+  mutable std::unordered_map<std::string, i32> m_uniform_location_cache;
 
   Shader(const std::string& vertex_filepath, const std::string& fragment_filepath);
   ~Shader();
@@ -50,6 +50,6 @@ public:
   // void setUniform(const std::string& name, i32 count, vec3* v);
   // void setUniform(const std::string& name, i32 count, vec4* v);
 
-  i32 getUniformLocation(const std::string& name);
+  i32 getUniformLocation(const std::string& name) const;
   
 };
