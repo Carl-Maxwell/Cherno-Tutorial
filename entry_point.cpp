@@ -61,6 +61,7 @@
 
 #include "tests/test.h"
 #include "tests/test_clear_color.h"
+#include "tests/test_texture_2d.h"
 
 //
 // Entry point
@@ -84,7 +85,8 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // window:
-  int WIDTH = 1280, HEIGHT = 720;
+  // int WIDTH = 1280, HEIGHT = 720;
+  int WIDTH = 1920, HEIGHT = 1080;
   window = glfwCreateWindow(WIDTH, HEIGHT, "Following Cherno OpenGL Tutorial", NULL, NULL);
 
   // borderless window:
@@ -152,6 +154,7 @@ int main() {
   current_test->title = "Test Menu";
 
   test_menu->registerTest<test::TestClearColor>("Clear Color");
+  test_menu->registerTest<test::TestTexture2d>("Texture 2d");
 
   //
   // Main loop

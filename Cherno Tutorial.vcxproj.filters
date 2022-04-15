@@ -78,6 +78,9 @@
     <ClCompile Include="trunk\keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="trunk\tests\test_texture_2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="trunk\mtypedefs.h">
@@ -156,6 +159,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trunk\keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trunk\tests\test_texture_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
